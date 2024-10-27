@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -11,6 +11,7 @@ model User {
   id           String    @id @default(uuid())
   first_name   String
   last_name    String
+  username     String     @unique 
   email        String     @unique
   password     String
   avatar       String?
@@ -19,6 +20,9 @@ model User {
   templates    Template[]
   blogPosts    BlogPost[]
   comments     Comment[]
+  ratings      Rating[]  // ratings
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Template {
@@ -47,16 +51,29 @@ model BlogPost {
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
   comments        Comment[]
+  ratings         Rating[] // ratings
 }
 
 model Comment {
-  id          String    @id @default(uuid())
-  blog_post   BlogPost  @relation(fields: [blog_post_id], references: [id])
+  id          String   @id @default(uuid())
+  blog_post   BlogPost @relation(fields: [blog_post_id], references: [id])
   blog_post_id String
-  user        User      @relation(fields: [user_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id])
   user_id     String
   content     String
-  created_at  DateTime  @default(now())
+  created_at  DateTime @default(now())
+  ratings     Rating[] // ratings
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  rating     Int      
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  blogPost   BlogPost? @relation(fields: [blog_post_id], references: [id])
+  blog_post_id String?
+  comment    Comment?  @relation(fields: [comment_id], references: [id])
+  comment_id String?
 }
 
 enum Role {
