@@ -19,6 +19,12 @@ npm install
 # Running database migrations
 npx prisma migrate deploy
 
+# Install dependencies if they are not installed
+if [ ! -d "node_modules" ]; then
+  echo "Installing dependencies..."
+  npm install
+fi
+
 # # Check for required compilers/interpreters
 # for cmd in gcc g++ python3; do
 #     if ! command -v $cmd &> /dev/null; then
