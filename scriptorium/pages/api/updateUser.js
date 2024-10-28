@@ -1,3 +1,5 @@
+// Developed with ChatGPT
+
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs'; // Use bcryptjs for consistency
 import { verifyToken } from '@/utils/jwt';
