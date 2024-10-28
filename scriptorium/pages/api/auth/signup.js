@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 import bcrypt from 'bcryptjs';
-import { generateToken } from '../../../utils/jwt';
+import { generateToken } from '@/utils/jwt';
 
 export default async function handler(req, res) {
     if (req.method == 'POST') {
@@ -26,14 +26,15 @@ export default async function handler(req, res) {
         });
         res.status(201).json({ message: 'User created successfully', user: newUser });
         
-    } catch (error) {
+      } catch (error) {
+        console.error('Signup Error:', error); // This will log the error in your console
         if (error.code === 'P2002') {
-          const duplicatedField = error.meta.target[0]; // for checking duplicated field
-          res.status(400).json({ error: `${duplicatedField} is already taken` });
+            const duplicatedField = error.meta.target[0]; // Get duplicated field
+            res.status(400).json({ error: `${duplicatedField} is already taken` });
         } else {
-            res.status(500).json({ error: 'Error creating user' });
-          }
+            res.status(500).json({ error: error.message || 'Error creating user' });
         }
+    }    
       } else {
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);

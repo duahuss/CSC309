@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs'; // Use bcryptjs for consistency
 import { verifyToken } from '@/utils/jwt';
 
 const prisma = new PrismaClient();
@@ -10,8 +10,19 @@ export default async function handler(req, res) {
 
         let userId;
         try {
-            userId = verifyToken(authorization);
+            if (!authorization) {
+                throw new Error('Token is missing');
+            }
+
+            const token = authorization.split(" ")[1]; // Extract token from "Bearer <token>" format
+            const decodedToken = verifyToken(token); // Verify the token
+            if (!decodedToken) {
+                throw new Error('Invalid token');
+            }
+
+            userId = decodedToken.userId; // Extract userId from decoded token
         } catch (error) {
+            console.error('Authorization error:', error.message); // Log specific error message
             return res.status(401).json({ error: 'Unauthorized' });
         }
 
