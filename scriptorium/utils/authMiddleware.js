@@ -7,11 +7,15 @@ export function authMiddleware(req, res, next) {
         return res.status(401).json({ message: "Token not provided" });
     }
 
-    const decoded = verifyToken(token);
-    if (!decoded) {
+    try {
+        const decoded = verifyToken(token);
+        if (!decoded) {
+            throw new Error("Invalid token");
+        }
+        req.userId = decoded.userId;
+        next();
+    } catch (error) {
+        console.error("Authentication error:", error.message);
         return res.status(401).json({ message: "Token is invalid" });
     }
-
-    req.userId = decoded.userId;
-    next();
 }

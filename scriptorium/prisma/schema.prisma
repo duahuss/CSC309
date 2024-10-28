@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -14,29 +14,27 @@ model User {
   username     String     @unique 
   email        String     @unique
   password     String
-  avatar       String?
+  avatar       String?    @default("user_default.png")
   phone_number String
-  role         Role      @default(USER)
+  role         String      @default("USER") // Change enum to string
   templates    Template[]
   blogPosts    BlogPost[]
   comments     Comment[]
-  ratings      Rating[]  // ratings
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  ratings      Rating[]  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Template {
   id          String    @id @default(uuid())
   title       String
   code        String    
-  language    Language
   description String
-  tags        String[]  
   author      User      @relation(fields: [author_id], references: [id])
   author_id   String
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
-  blogPosts   BlogPost[] @relation("BlogPostTemplates")
+  tags        Tag[] @relation("TemplateTags") // Use a relation to a new Tag model
 }
 
 model BlogPost {
@@ -46,12 +44,11 @@ model BlogPost {
   content         String
   author          User      @relation(fields: [author_id], references: [id])
   author_id       String
-  tags            String[]  
-  linked_templates Template[] @relation("BlogPostTemplates")
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
   comments        Comment[]
-  ratings         Rating[] // ratings
+  ratings         Rating[]
+  tags            Tag[] @relation("BlogPostTags") // Use a relation to a new Tag model
 }
 
 model Comment {
@@ -62,7 +59,7 @@ model Comment {
   user_id     String
   content     String
   created_at  DateTime @default(now())
-  ratings     Rating[] // ratings
+  ratings     Rating[]
 }
 
 model Rating {
@@ -76,15 +73,9 @@ model Rating {
   comment_id String?
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum Language {
-  C
-  CPP // C++
-  Java
-  Python
-  JavaScript
+model Tag {
+  id   String  @id @default(uuid())
+  name String  @unique
+  templates Template[] @relation("TemplateTags")
+  blogPosts BlogPost[] @relation("BlogPostTags")
 }
