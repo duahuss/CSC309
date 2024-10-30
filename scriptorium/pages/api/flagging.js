@@ -1,10 +1,10 @@
-import { prisma } from '@prisma/client';
+import { prisma } from '@/prisma/client';
 
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { explanation, reporterId, postId, commentId } = req.body;
-
+    console.log(explanation, reporterId, postId, commentId)
     if (!postId && !commentId) {
       return res.status(400).json({ error: 'Must provide postId or commentId' });
     }
@@ -13,28 +13,31 @@ export default async function handler(req, res) {
       const newReport = await prisma.report.create({
         data: {
           explanation,
-          reporterId,
-          postId,
-          commentId,
+          reporter: { connect: { id: reporterId } }, // Link to the reporter (user)
+          post: postId ? { connect: { id: postId } } : undefined, // Connect to post if provided
+          comment: commentId ? { connect: { id: commentId } } : undefined, // Connect to comment if provided
         },
       });
+      console.log("hi")
+
 
       // Increment reportsCount on the reported post or comment
       if (postId) {
         await prisma.blogPost.update({
           where: { id: postId },
-          data: { reportsCount: { increment: 1 } },
+          data: { numOfReports: { increment: 1 } },
         });
       } else if (commentId) {
         await prisma.comment.update({
           where: { id: commentId },
-          data: { reportsCount: { increment: 1 } },
+          data: { numOfReports: { increment: 1 } },
         });
       }
 
       res.status(201).json(newReport);
     } catch (error) {
-      res.status(500).json({ error: 'Error reporting content' });
+      console.error("Error reporting content:", error);
+      res.status(500).json({ error: 'Error reporting content', });
     }
   } else {
     res.setHeader('Allow', ['POST']);
