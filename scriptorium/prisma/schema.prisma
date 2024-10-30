@@ -20,6 +20,7 @@ model User {
   templates    Template[]
   blogPosts    BlogPost[]
   comments     Comment[]
+  reports      Report[]    @relation("UserReports") // Relation to Report
   ratings      Rating[]  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -48,7 +49,11 @@ model BlogPost {
   updated_at      DateTime  @updatedAt
   comments        Comment[]
   ratings         Rating[]
+  reports         Report[]  @relation("BlogPostReports") // Relation to Report
   tags            Tag[] @relation("BlogPostTags") // Use a relation to a new Tag model
+  numOfUpvotes    Int       @default(0)
+  numOfDownvotes  Int       @default(0)
+  numOfReports    Int       @default(0)
 }
 
 model Comment {
@@ -58,8 +63,15 @@ model Comment {
   user        User     @relation(fields: [user_id], references: [id])
   user_id     String
   content     String
+  parent      Comment? @relation("CommentReplies", fields: [parent_id], references: [id])
+  parent_id   String?
+  replies     Comment[] @relation("CommentReplies")
   created_at  DateTime @default(now())
   ratings     Rating[]
+  reports     Report[]  @relation("CommentReports") // Relation to Report
+  numOfUpvotes Int      @default(0)
+  numOfDownvotes  Int   @default(0) 
+  numOfReports    Int   @default(0)
 }
 
 model Rating {
@@ -71,6 +83,7 @@ model Rating {
   blog_post_id String?
   comment    Comment?  @relation(fields: [comment_id], references: [id])
   comment_id String?
+  targetType String
 }
 
 model Tag {
@@ -78,4 +91,16 @@ model Tag {
   name String  @unique
   templates Template[] @relation("TemplateTags")
   blogPosts BlogPost[] @relation("BlogPostTags")
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  explanation String
+  createdAt   DateTime @default(now())
+  reporter    User     @relation("UserReports", fields: [reporterId], references: [id])
+  reporterId  String
+  post        BlogPost? @relation("BlogPostReports", fields: [postId], references: [id])
+  postId      String?
+  comment     Comment?  @relation("CommentReports", fields: [commentId], references: [id])
+  commentId   String?
 }
