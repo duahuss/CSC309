@@ -7,7 +7,7 @@ async function main() {
     data: {
       first_name: 'Eren',
       last_name: 'Yeager',
-      //username: 'attacktitan',
+      username: 'attacktitan',
       email: 'eren.yeager@example.com',
       password: 'freedom', 
       avatar: 'path/to/avatar1.png',
