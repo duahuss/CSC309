@@ -1,8 +1,10 @@
+// ChatGPT used for admin non-expiring token 
+
 import jwt from 'jsonwebtoken';
 
-export function generateToken(userId, isAdmin = false) {
+export const generateToken = (userId, isAdmin) => {
     // Set expiration: 1 hour for regular users, no expiration for admin
-    const expiresIn = isAdmin ? '100y' : '1h'; // Example: 100 years for admin
+    const expiresIn = isAdmin ? '100y' : '1h'; // 100 years for admin
     return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn });
 }
 
