@@ -58,7 +58,8 @@ async function createAdmin() {
             username: '$ADMIN_USERNAME',
             email: '$ADMIN_USERNAME@example.com',
             password: hashedPassword,
-            phone_number: '123'
+            phone_number: '123',
+            admin_user: true
         },
     });
 

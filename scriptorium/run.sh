@@ -15,4 +15,4 @@ fi
 
 # Start the server
 echo "Starting the server..."
-npm run start
+npm run dev
