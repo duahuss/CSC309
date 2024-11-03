@@ -36,6 +36,7 @@ model Template {
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
   tags        Tag[] @relation("TemplateTags") // Use a relation to a new Tag model
+  blogPosts   BlogPost[] @relation("TemplateBlogPosts")
 }
 
 model BlogPost {
@@ -43,6 +44,7 @@ model BlogPost {
   title           String
   description     String
   content         String
+  templates       Template[] @relation("TemplateBlogPosts")
   author          User      @relation(fields: [author_id], references: [id])
   author_id       String
   created_at      DateTime  @default(now())

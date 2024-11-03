@@ -30,7 +30,6 @@ export default async function handler(req, res) {
         if (!user) {
           return res.status(404).json({ error: 'User not found.' });
         }
-        console.log({blog_post_id, content})
     
         if (!content || !blog_post_id) { // Removed user_id from here as it's not needed
           return res.status(400).json({ error: "Missing required fields" });
@@ -40,10 +39,8 @@ export default async function handler(req, res) {
         const blogPost1 = await prisma.blogPost.findUnique({
           where: { id: blog_post_id },
         });
-        console.log({blog_post_id, content})
 
         if (!blogPost1) {
-          console.log("hi")
           return res.status(404).json({ error: "Blog post not found." });
         }
 
