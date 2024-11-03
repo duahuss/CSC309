@@ -18,7 +18,6 @@ if [ -f ".env" ]; then
     set -a # Automatically export all variables
     source .env # Source the environment file
     set +a # Disable automatic export
-
 fi
 
 # Install dependencies if not already installed
