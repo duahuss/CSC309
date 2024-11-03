@@ -1,4 +1,8 @@
 import { prisma } from "@/prisma/client";
+//USER STORY: As a visitor, I want to browse and read blog posts 
+//so that I can learn from others’ experiences and code examples. 
+//I want to search through blog posts by their title, content, tags, 
+//and also the code templates they contain.
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -36,6 +40,7 @@ export default async function handler(req, res) {
               select: { username: true }, // Include username in the response
             },
             tags: true, // Include tags in the response
+            templates: true,
             comments: {
               include: {
                 user: {

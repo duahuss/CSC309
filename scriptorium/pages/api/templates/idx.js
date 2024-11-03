@@ -1,5 +1,6 @@
 import { prisma } from "@/prisma/client";
-
+//USER STORY: As a visitor, I want to search through all available templates by title, 
+//tags, or content so that I can quickly find relevant code for my needs.
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {

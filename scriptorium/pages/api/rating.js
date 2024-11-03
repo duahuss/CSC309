@@ -3,11 +3,21 @@ import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const token = req.headers.authorization?.split(" ")[1];
-    const userId = jwt.verify(token, process.env.JWT_SECRET).userId;
-
+    const getUserIdFromToken = (token) => {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return decoded.userId; // Ensure your token contains userId
+      } catch (error) {
+        return null; // Token is invalid
+      }
+    };
+  
+    const token = req.headers.authorization?.split(' ')[1]; // Bearer token
+    const userId = getUserIdFromToken(token);
+  
+    
     if (!userId) {
-      return res.status(401).json({ error: "User must be signed in to rate." });
+      return res.status(401).json({ error: 'You must be signed in to edit or delete a template.' });
     }
 
     const { rating, targetId, targetType } = req.body; // targetId is blogPost or comment ID
@@ -36,36 +46,58 @@ export default async function handler(req, res) {
 
       if (existingRating) {
         // Update existing rating
+        if(targetType==="blogPost"){
+          if(rating === 1 && existingRating.rating == -1){
+            await prisma.blogPost.update({
+              where: { id: targetId },
+              data: { numOfDownvotes: { increment: -1 } },
+            });
+            await prisma.blogPost.update({
+              where: { id: targetId },
+              data: { numOfUpvotes: { increment: 1 } },
+            });
+            
+          }else if (rating == -1 && existingRating.rating == 1){
+            await prisma.blogPost.update({
+              where: { id: targetId },
+              data: { numOfUpvotes: { increment: -1 } },
+            });
+            await prisma.blogPost.update({
+              where: { id: targetId },
+              data: { numOfDownvotes: { increment: 1 } },
+            });
+          }else{
+            return res.status(401).json({ error: "You can't rate this post again" })
+          }
+
+        } else{
+          if(rating === 1 && existingRating.rating == -1){
+            await prisma.comment.update({
+              where: { id: targetId },
+              data: { numOfDownvotes: { increment: -1 } },
+            });
+            await prisma.comment.update({
+              where: { id: targetId },
+              data: { numOfUpvotes: { increment: 1 } },
+            });
+            
+          }else if (rating == -1 && existingRating.rating == 1){
+            await prisma.comment.update({
+              where: { id: targetId },
+              data: { numOfUpvotes: { increment: -1 } },
+            });
+            await prisma.comment.update({
+              where: { id: targetId },
+              data: { numOfDownvotes: { increment: 1 } },
+            });
+          }else{
+            return res.status(401).json({ error: "You can't rate this comment again" })
+          }
+        }
         const updatedRating = await prisma.rating.update({
           where: { id: existingRating.id },
           data: { rating },
         });
-        if(targetType==="blogPost"){
-          if(rating === 1){
-            await prisma.blogPost.update({
-              where: { id: targetId },
-              data: { numOfDownvotes: { increment: -1 } },
-            });
-          }else{
-            await prisma.blogPost.update({
-              where: { id: targetId },
-              data: { numOfUpvotes: { increment: -1 } },
-            });
-          }
-
-        } else{
-          if(rating === 1){
-            await prisma.comment.update({
-              where: { id: targetId },
-              data: { numOfDownvotes: { increment: -1 } },
-            });
-          }else{
-            await prisma.comment.update({
-              where: { id: targetId },
-              data: { numOfUpvotes: { increment: -1 } },
-            });
-          }
-        }
         
         return res.status(200).json(updatedRating);
       } else {
