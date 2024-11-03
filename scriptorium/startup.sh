@@ -15,7 +15,9 @@ fi
 
 # Load environment variables from .env file if it exists
 if [ -f ".env" ]; then
-    export $(grep -v '^#' .env | xargs)
+    set -a # Automatically export all variables
+    source .env # Source the environment file
+    set +a # Disable automatic export
 fi
 
 # Install dependencies if not already installed
