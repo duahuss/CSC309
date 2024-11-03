@@ -17,8 +17,8 @@ export default async function handler(req, res) {
         }
 
 
-        if(!avatar || avatar != "/uploads/avatars/avatar1.png"||avatar != "/uploads/avatars/avatar2.png"||avatar != "/uploads/avatars/avatar3.png"){
-          return res.status(400).json({ error: 'You must select an avatar from the choices : (avatar1, avatar2, avatar 3)' });
+        if(!avatar || (avatar !== "/uploads/avatars/avatar1.png" && avatar !== "/uploads/avatars/avatar2.png" && avatar !== "/uploads/avatars/avatar3.png")){
+            return res.status(400).json({ error: 'You must select an avatar from the choices : (avatar1, avatar2, avatar 3)' });
         }
 
         if (password.length < 8) {
