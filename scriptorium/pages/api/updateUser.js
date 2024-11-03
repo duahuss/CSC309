@@ -51,7 +51,13 @@ export default async function handler(req, res) {
                 data: updateData,
             });
 
-            res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+            const responseUser = {
+                username: updatedUser.username,
+                phone_number: updatedUser.phone_number,
+                avatar: updatedUser.avatar
+            };
+
+            res.status(200).json({ message: 'User updated successfully', user: responseUser });
         } catch (error) {
             console.error('Update error:', error); // Log the error details
             res.status(500).json({ error: 'Error updating user' });

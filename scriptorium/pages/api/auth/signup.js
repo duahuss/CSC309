@@ -49,7 +49,17 @@ export default async function handler(req, res) {
                     phone_number,
                 },
             });
-            res.status(201).json({ message: 'User created successfully', user: newUser });
+
+            const responseUser = {
+                first_name: newUser.first_name,
+                last_name: newUser.last_name,
+                username: newUser.username,
+                email: newUser.email,
+                avatar: newUser.avatar,
+                phone_number: newUser.phone_number,
+            };
+
+            res.status(201).json({ message: 'User created successfully', user: responseUser });
         } catch (error) {
             console.error('Signup Error:', error); // This will log the error in your console
             if (error.code === 'P2002') {
