@@ -43,8 +43,7 @@ export default async function handler(req, res) {
       try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const isAdmin = (
-          username === ADMIN_USERNAME && 
-          password === ADMIN_PASSWORD && 
+          username === ADMIN_USERNAME || 
           email == ADMIN_EMAIL
         );
 
