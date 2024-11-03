@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 import bcrypt from 'bcryptjs';
 // import { generateToken } from '@/utils/jwt';
 
+
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { first_name, last_name, username, email, password, avatar, phone_number } = req.body;
@@ -13,6 +14,11 @@ export default async function handler(req, res) {
         // General error checking
         if (!first_name || !last_name || !username || !email || !password || !phone_number) {
             return res.status(400).json({ error: 'All fields are required' });
+        }
+
+
+        if(!avatar || avatar != "/uploads/avatars/avatar1.png"||avatar != "/uploads/avatars/avatar2.png"||avatar != "/uploads/avatars/avatar3.png"){
+          return res.status(400).json({ error: 'You must select an avatar from the choices : (avatar1, avatar2, avatar 3)' });
         }
 
         if (password.length < 8) {
@@ -57,4 +63,4 @@ export default async function handler(req, res) {
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-}
+
