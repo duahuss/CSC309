@@ -16,7 +16,7 @@ model User {
   password     String
   avatar       String?    @default("user_default.png")
   phone_number String
-  role         String      @default("USER") // Change enum to string
+  is_admin     Boolean    
   templates    Template[]
   blogPosts    BlogPost[]
   comments     Comment[]
