@@ -7,6 +7,10 @@ if [ -f ".env" ]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
+# running startup script
+echo "Running startup script..."
+./startup.sh
+
 # Check if the environment is set up correctly
 if [ ! -d "node_modules" ]; then
     echo "Dependencies not installed. Please run 'startup.sh' first."
@@ -14,5 +18,5 @@ if [ ! -d "node_modules" ]; then
 fi
 
 # Start the server
-echo "Starting the server..."
-npm run start
+echo "Starting the server in development mode..."
+npm run dev

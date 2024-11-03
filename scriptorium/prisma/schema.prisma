@@ -14,7 +14,7 @@ model User {
   username     String     @unique 
   email        String     @unique
   password     String
-  avatar       String?    @default("user_default.png")
+  avatar       String?    @default("/uploads/avatars/avatar1.png")
   phone_number String
   is_admin     Boolean    @default(false) 
   templates    Template[]
