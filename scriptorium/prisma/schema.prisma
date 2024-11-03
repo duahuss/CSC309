@@ -106,3 +106,10 @@ model Report {
   comment     Comment?  @relation("CommentReports", fields: [commentId], references: [id])
   commentId   String?
 }
+
+model BlacklistedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
