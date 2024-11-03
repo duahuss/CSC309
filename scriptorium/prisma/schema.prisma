@@ -51,6 +51,7 @@ model BlogPost {
   updated_at      DateTime  @updatedAt
   comments        Comment[]
   ratings         Rating[]
+  is_hidden       Boolean   @default(false)
   reports         Report[]  @relation("BlogPostReports") // Relation to Report
   tags            Tag[] @relation("BlogPostTags") // Use a relation to a new Tag model
   numOfUpvotes    Int       @default(0)
@@ -70,6 +71,7 @@ model Comment {
   replies     Comment[] @relation("CommentReplies")
   created_at  DateTime @default(now())
   ratings     Rating[]
+  is_hidden   Boolean   @default(false)
   reports     Report[]  @relation("CommentReports") // Relation to Report
   numOfUpvotes Int      @default(0)
   numOfDownvotes  Int   @default(0) 

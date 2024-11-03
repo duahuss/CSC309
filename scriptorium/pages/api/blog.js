@@ -46,10 +46,12 @@ export default async function handler(req, res) {
                 user: {
                   select: { username: true, avatar: true } // Include user details for comments
                 },
-                ratings: true // Include ratings for each comment
+                ratings: true, // Include ratings for each comment
+                is_hidden: false
               }
             },
             ratings: true, // Include ratings for the blog post
+            is_hidden: false
           },
         });
     
