@@ -30,10 +30,12 @@ export default async function handler(req, res) {
             orderBy: { numOfUpvotes: 'desc' }, // Sort comments by upvotes within each post
             include: {
               user: { select: { username: true, avatar: true } },
-              ratings: true
+              ratings: true,
+              is_hidden: false
             }
           },
-          ratings: true
+          ratings: true,
+          is_hidden: false
         },
       });
 

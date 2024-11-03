@@ -21,6 +21,10 @@ export default async function handler(req, res) {
 
     if (req.method === 'PUT') {
         const {title, description, tags, templateIds } = req.body;
+        const post = await prisma.blogPost.findUnique({ where: { id: id } }); 
+        if (post.is_hidden) {
+            return res.status(403).json({ message: 'Post is hidden' }); 
+        }
 
         try {
         const updatedPost = await prisma.blogPost.update({
