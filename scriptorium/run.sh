@@ -18,9 +18,5 @@ if [ ! -d "node_modules" ]; then
 fi
 
 # Start the server
-<<<<<<< HEAD
-echo "Starting the server..."
-=======
 echo "Starting the server in development mode..."
->>>>>>> maleeha
 npm run dev
