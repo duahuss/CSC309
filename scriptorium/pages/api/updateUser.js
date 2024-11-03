@@ -39,6 +39,11 @@ export default async function handler(req, res) {
                     return res.status(409).json({ error: 'Username is already taken' });
                 }
             }
+            
+            // Added avatar check
+            if (avatar && (avatar !== "/uploads/avatars/avatar1.png" && avatar !== "/uploads/avatars/avatar2.png" && avatar !== "/uploads/avatars/avatar3.png")) {
+                return res.status(400).json({ error: 'You must select an avatar from the choices: (avatar1, avatar2, avatar3)' });
+            }
 
             const updateData = {};
             if (username) updateData.username = username;
