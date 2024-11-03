@@ -20,9 +20,6 @@ export default async function handler(req, res) {
                 // Handle tags update (assumes you have a relation to a Tag model)
                 set: tags.map(tag => ({ name: tag })),
               },
-              templates: {
-                set: templateIds?.map(templateId => ({ id: templateId })) || [], // Replace existing templates with new ones
-              },
               
             },
           });
