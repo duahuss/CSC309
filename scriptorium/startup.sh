@@ -24,6 +24,10 @@ fi
 if [ ! -d "node_modules" ]; then
     echo "Installing dependencies..."
     npm install
+    npm install fs-extra
+    npm install path
+    npm install child_process
+    npm install util
 fi
 
 # Running database migrations
